@@ -18,8 +18,8 @@ class User(models.Model):
     telegram_id = models.CharField(max_length=100, unique=True)
 
     class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
+        verbose_name = 'Телеграм пользователь'
+        verbose_name_plural = 'Телеграм пользователи'
 
     def __str__(self):
         return f'{self.name} - {self.id}'
