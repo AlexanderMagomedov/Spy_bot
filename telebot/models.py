@@ -30,5 +30,4 @@ class Game(models.Model):
     spy = models.PositiveSmallIntegerField(default=1)
     undercover = models.PositiveSmallIntegerField(default=1)
     user = models.ForeignKey(to=User, related_name='user', on_delete=models.CASCADE)
-    word1 = models.ForeignKey(to=Word, related_name='word1_spy', on_delete=models.CASCADE)
-    word2 = models.ForeignKey(to=Word, related_name='word2_undercover', on_delete=models.CASCADE)
+    word = models.ForeignKey(to=Word, related_name='word', on_delete=models.CASCADE)

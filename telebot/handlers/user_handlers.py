@@ -2,9 +2,12 @@ from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.types import Message
 from aiogram.types import CallbackQuery
-from telebot.keyboards.keyboards import create_menu_keyboard, create_back_keyboard
-from telebot.lexicon.lexicon_ru import LEXICON_RU
+from asgiref.sync import sync_to_async
 
+from telebot.keyboards.keyboards import create_menu_keyboard, create_back_keyboard, create_game_keyboard
+from telebot.lexicon.lexicon_ru import LEXICON_RU
+from telebot.models import Game, User, Word
+import sqlite3
 
 router = Router()
 
@@ -12,7 +15,23 @@ router = Router()
 # Эт X срабатывает на команду "/start" отправлять приветственное сообщение показывая кнопки главного меню
 @router.message(CommandStart())
 async def process_start_command(message: Message):
+    if str(message.from_user.id) not in give_all_telegram_id():
+        user = User(name=message.from_user.username, telegram_id=message.from_user.id)
+        await user_save(user)
     await message.answer(LEXICON_RU[message.text], reply_markup=create_menu_keyboard())
+
+@sync_to_async
+def user_save(user):
+    user.save()
+
+
+# Функция возвращает полный список всех телеграм ид сотрудников
+def give_all_telegram_id():
+    connect = sqlite3.connect('db.sqlite3')
+    cursor = connect.cursor()
+    user_list_all = (list(map(lambda x: x[0], cursor.execute("SELECT telegram_id FROM telebot_user").fetchall())))
+    connect.close()
+    return user_list_all
 
 
 # Эт X срабатывает на нажатие инлайн-кнопки "Назад" и возвращать в главное меню
@@ -45,4 +64,24 @@ async def process_about_me_command(message: Message):
 @router.callback_query(F.data == '/rules')
 async def process_about_me(callback: CallbackQuery):
     await callback.message.edit_text(text=LEXICON_RU['/rules'], reply_markup=create_back_keyboard('/start'))
+    await callback.answer()
+
+
+# Эт X срабатывает на команду "/game" отправляет сообщение и клавиатуру создания игры
+@router.message(Command(commands='game'))
+async def process_about_me_command(message: Message):
+    await message.answer(LEXICON_RU[message.text], reply_markup=create_game_keyboard('/start'))
+
+
+# Эт X срабатывает на нажатие инлайн-кнопки "Начало игры" в главном меню показывает клавиатуру создания игры
+@router.callback_query(F.data == '/game')
+async def process_about_me(callback: CallbackQuery):
+    game = Game(
+        peace=1,
+        spy=1,
+        undercover=1,
+        user_id=User.objects.filter(name=callback.from_user.username).id,
+        word_id=Word.objects.order_by("?").first()
+    )
+    await callback.message.edit_text(text=LEXICON_RU['/game'], reply_markup=create_game_keyboard(game))
     await callback.answer()

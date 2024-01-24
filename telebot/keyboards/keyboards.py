@@ -27,3 +27,16 @@ def create_back_keyboard(arg) -> InlineKeyboardMarkup:
         text=LEXICON_RU['/back'],
         callback_data=arg))
     return kb_builder.as_markup()
+
+
+# Функция создания инлайн кнопок главного меню
+def create_game_keyboard(game) -> InlineKeyboardMarkup:
+    # Создаем объект клавиатуры
+    kb_builder = InlineKeyboardBuilder()
+    # Наполняем клавиатуру кнопками-закладками в порядке возрастания
+    kb_builder.row(
+        InlineKeyboardButton(text='Left', callback_data='pease_left'),
+        InlineKeyboardButton(text=f'Мирные жители {game.peace}', callback_data=''),
+        InlineKeyboardButton(text='Right', callback_data='pease_right'), width=3
+    )
+    return kb_builder.as_markup()
