@@ -43,5 +43,17 @@ def create_game_keyboard(game) -> InlineKeyboardMarkup:
     kb_builder.row(InlineKeyboardButton(text=f'Забывчивый шпион {game.undercover}', callback_data='None'))
     kb_builder.row(InlineKeyboardButton(text='➖', callback_data='undercover-1'),
                    InlineKeyboardButton(text='➕', callback_data='undercover+1'), width=2)
-    kb_builder.row(InlineKeyboardButton(text=f'Итого {game.peace+game.spy+game.undercover}. Поехали?!', callback_data='None'))
+    kb_builder.row(InlineKeyboardButton(
+        text=f'Итого {game.peace+game.spy+game.undercover}. Поехали?!',
+        callback_data='start_game'))
+    return kb_builder.as_markup()
+
+# Функция создания инлайн кнопок главного меню
+def create_game_process_keyboard(massiv) -> InlineKeyboardMarkup:
+    # Создаем объект клавиатуры
+    kb_builder = InlineKeyboardBuilder()
+    # Наполняем клавиатуру кнопками-закладками в порядке возрастания
+    kb_builder.row(*[InlineKeyboardButton(
+        text=mass[0],
+        callback_data=mass[1]) for mass in massiv], width=1)
     return kb_builder.as_markup()

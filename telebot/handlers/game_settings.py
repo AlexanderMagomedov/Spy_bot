@@ -19,7 +19,7 @@ def give_game(callback):
 @router.callback_query(F.data == 'peaсe-1')
 async def process_about_me(callback: CallbackQuery):
     game = await give_game(callback)
-    if game.peace > 2:
+    if game.peace > 0:
         game.peace -= 1
         await db_save(game)
         await callback.message.edit_text(text=LEXICON_RU['/game'], reply_markup=create_game_keyboard(game))
@@ -78,4 +78,9 @@ async def process_about_me(callback: CallbackQuery):
         game.undercover += 1
         await db_save(game)
         await callback.message.edit_text(text=LEXICON_RU['/game'], reply_markup=create_game_keyboard(game))
+    await callback.answer()
+
+# Эт X срабатывает на нажатие инлайн-кнопки "None" и ничего не делать
+@router.callback_query(F.data == 'None')
+async def process_about_me(callback: CallbackQuery):
     await callback.answer()

@@ -71,7 +71,15 @@ async def process_about_me(callback: CallbackQuery):
 # Эт X срабатывает на команду "/game" отправляет сообщение и клавиатуру создания игры
 @router.message(Command(commands='game'))
 async def process_about_me_command(message: Message):
-    await message.answer(LEXICON_RU[message.text], reply_markup=create_game_keyboard('/start'))
+    game = Game(
+        peace=1,
+        spy=1,
+        undercover=1,
+        telegram=message.from_user.id,
+        word_id=await give_words()
+    )
+    await db_save(game)
+    await message.answer(LEXICON_RU[message.text], reply_markup=create_game_keyboard(game))
 
 
 # Эт X срабатывает на нажатие инлайн-кнопки "Начало игры" в главном меню показывает клавиатуру создания игры
