@@ -3,7 +3,7 @@ import asyncio
 
 from aiogram import Bot, Dispatcher
 from telebot.config_data.config import Config, load_config
-from telebot.handlers import other_handlers, user_handlers, game_settings
+from telebot.handlers import other_handlers, user_handlers, game_settings, game_process
 from telebot.keyboards.main_menu import set_main_menu
 
 
@@ -24,6 +24,7 @@ class Command(BaseCommand):
             # Регистриуем роутеры в диспетчере
             dp.include_router(user_handlers.router)
             dp.include_router(game_settings.router)
+            dp.include_router(game_process.router)
             dp.include_router(other_handlers.router)
 
             # Настраиваем главное меню бота
