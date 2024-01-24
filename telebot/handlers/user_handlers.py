@@ -17,13 +17,13 @@ router = Router()
 async def process_start_command(message: Message):
     if str(message.from_user.id) not in give_all_telegram_id():
         user = User(name=message.from_user.username, telegram_id=message.from_user.id)
-        await user_save(user)
+        await db_save(user)
     await message.answer(LEXICON_RU[message.text], reply_markup=create_menu_keyboard())
 
 
 @sync_to_async
-def user_save(user):
-    user.save()
+def db_save(arg):
+    arg.save()
 
 
 # Функция возвращает полный список всех телеграм ид сотрудников
@@ -81,13 +81,14 @@ async def process_about_me(callback: CallbackQuery):
         peace=1,
         spy=1,
         undercover=1,
-        telegram_id=callback.from_user.id,
-        word_id=give_words
+        telegram=callback.from_user.id,
+        word_id=await give_words()
     )
+    await db_save(game)
     await callback.message.edit_text(text=LEXICON_RU['/game'], reply_markup=create_game_keyboard(game))
     await callback.answer()
 
 
 @sync_to_async
 def give_words():
-    return Word.objects.order_by("?").first()
+    return str(Word.objects.order_by("?").first().id)
