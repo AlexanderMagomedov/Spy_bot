@@ -33,3 +33,16 @@ async def process_about_me_command(message: Message):
 async def process_about_me(callback: CallbackQuery):
     await callback.message.edit_text(text=LEXICON_RU['/about_me'], reply_markup=create_back_keyboard('/start'))
     await callback.answer()
+
+
+# Эт X срабатывает на команду "/rules" отправляет сообщение c правилами и кнопку "назад"
+@router.message(Command(commands='rules'))
+async def process_about_me_command(message: Message):
+    await message.answer(LEXICON_RU[message.text], reply_markup=create_back_keyboard('/start'))
+
+
+# Эт X срабатывает на нажатие инлайн-кнопки "Правила игры" в главном меню показывает правила и кнопку "назад"
+@router.callback_query(F.data == '/rules')
+async def process_about_me(callback: CallbackQuery):
+    await callback.message.edit_text(text=LEXICON_RU['/rules'], reply_markup=create_back_keyboard('/start'))
+    await callback.answer()
