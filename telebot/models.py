@@ -22,7 +22,7 @@ class User(models.Model):
         verbose_name_plural = 'Телеграм пользователи'
 
     def __str__(self):
-        return f'{self.name} - {self.id}'
+        return f'{self.name} - {self.telegram_id}'
 
 
 class Game(models.Model):

@@ -20,6 +20,7 @@ async def process_start_command(message: Message):
         await user_save(user)
     await message.answer(LEXICON_RU[message.text], reply_markup=create_menu_keyboard())
 
+
 @sync_to_async
 def user_save(user):
     user.save()
@@ -80,8 +81,13 @@ async def process_about_me(callback: CallbackQuery):
         peace=1,
         spy=1,
         undercover=1,
-        user_id=User.objects.filter(name=callback.from_user.username).id,
-        word_id=Word.objects.order_by("?").first()
+        user_id=User.objects.filter(name=callback.from_user.username),
+        word_id=give_words
     )
     await callback.message.edit_text(text=LEXICON_RU['/game'], reply_markup=create_game_keyboard(game))
     await callback.answer()
+
+
+@sync_to_async
+def give_words():
+    return Word.objects.order_by("?").first()
