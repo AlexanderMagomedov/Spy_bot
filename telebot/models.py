@@ -37,4 +37,8 @@ class Game(models.Model):
         verbose_name_plural = 'Игры'
 
     def __str__(self):
-        return f'{self.telegram} угадывают слово {self.word}'
+        return f'{self.telegram} \n' \
+               f'Мирных жителей {self.peace} \n' \
+               f'Шпион {self.spy} \n' \
+               f'Забывчивый шпион {self.undercover} \n' \
+               f'Угадывают слово {self.word}'
