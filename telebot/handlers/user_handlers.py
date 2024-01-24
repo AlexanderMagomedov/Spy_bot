@@ -81,7 +81,7 @@ async def process_about_me(callback: CallbackQuery):
         peace=1,
         spy=1,
         undercover=1,
-        user_id=User.objects.filter(name=callback.from_user.username),
+        telegram_id=callback.from_user.id,
         word_id=give_words
     )
     await callback.message.edit_text(text=LEXICON_RU['/game'], reply_markup=create_game_keyboard(game))

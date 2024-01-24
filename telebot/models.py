@@ -29,5 +29,12 @@ class Game(models.Model):
     peace = models.PositiveSmallIntegerField(default=1)
     spy = models.PositiveSmallIntegerField(default=1)
     undercover = models.PositiveSmallIntegerField(default=1)
-    user = models.ForeignKey(to=User, related_name='user', on_delete=models.CASCADE)
+    telegram_id = models.CharField(max_length=32)
     word = models.ForeignKey(to=Word, related_name='word', on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Игра'
+        verbose_name_plural = 'Игры'
+
+    def __str__(self):
+        return f'{self.telegram_id} угадывают слово {self.word}'

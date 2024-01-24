@@ -35,8 +35,8 @@ def create_game_keyboard(game) -> InlineKeyboardMarkup:
     kb_builder = InlineKeyboardBuilder()
     # Наполняем клавиатуру кнопками-закладками в порядке возрастания
     kb_builder.row(InlineKeyboardButton(text=f'Мирные жители {game.peace}', callback_data='None'))
-    kb_builder.row(InlineKeyboardButton(text='➖', callback_data='pease-1'),
-                   InlineKeyboardButton(text='➕', callback_data='pease+1'), width=2)
+    kb_builder.row(InlineKeyboardButton(text='➖', callback_data='peaсe-1'),
+                   InlineKeyboardButton(text='➕', callback_data='peaсe+1'), width=2)
     kb_builder.row(InlineKeyboardButton(text=f'Шпион {game.spy}', callback_data='None'))
     kb_builder.row(InlineKeyboardButton(text='➖', callback_data='pease_left'),
                    InlineKeyboardButton(text='➕', callback_data='pease_right'), width=2)
