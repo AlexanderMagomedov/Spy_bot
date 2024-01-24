@@ -24,3 +24,11 @@ class User(models.Model):
     def __str__(self):
         return f'{self.name} - {self.id}'
 
+
+class Game(models.Model):
+    peace = models.PositiveSmallIntegerField(default=1)
+    spy = models.PositiveSmallIntegerField(default=1)
+    undercover = models.PositiveSmallIntegerField(default=1)
+    user = models.ForeignKey(to=User, related_name='user', on_delete=models.CASCADE)
+    word1 = models.ForeignKey(to=Word, related_name='word1_spy', on_delete=models.CASCADE)
+    word2 = models.ForeignKey(to=Word, related_name='word2_undercover', on_delete=models.CASCADE)
