@@ -47,12 +47,27 @@ def create_game_keyboard(game) -> InlineKeyboardMarkup:
     kb_builder.row(InlineKeyboardButton(text=LEXICON_RU['/back'], callback_data='/start'))
     return kb_builder.as_markup()
 
-# Функция создания инлайн кнопок игроков
-def create_game_process_keyboard(massiv) -> InlineKeyboardMarkup:
+
+# Функция создания инлайн кнопки "Закончить игру"
+def create_finish_keyboard(game) -> InlineKeyboardMarkup:
     # Создаем объект клавиатуры
     kb_builder = InlineKeyboardBuilder()
     # Наполняем клавиатуру кнопками-закладками в порядке возрастания
-    kb_builder.row(*[InlineKeyboardButton(
-        text=mass[0],
-        callback_data=mass[1]) for mass in massiv], width=1)
+    kb_builder.row(InlineKeyboardButton(
+        text=LEXICON_RU['/finish'],
+        callback_data=f'finish {game.word.word1.upper()} {game.word.word2.upper()}'))
+    return kb_builder.as_markup()
+
+
+# Функция создания инлайн кнопок "Новое слово" "Назад"
+def create_double_keyboard(arg) -> InlineKeyboardMarkup:
+    # Создаем объект клавиатуры
+    kb_builder = InlineKeyboardBuilder()
+    # Наполняем клавиатуру кнопками-закладками в порядке возрастания
+    kb_builder.row(InlineKeyboardButton(
+        text=LEXICON_RU['/new_word'],
+        callback_data='/new_word'))
+    kb_builder.row(InlineKeyboardButton(
+        text=LEXICON_RU['/back'],
+        callback_data=arg))
     return kb_builder.as_markup()
