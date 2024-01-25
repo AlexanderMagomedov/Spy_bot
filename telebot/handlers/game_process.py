@@ -1,3 +1,5 @@
+import time
+
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from asgiref.sync import sync_to_async
@@ -16,7 +18,13 @@ router = Router()
 async def process_about_me(callback: CallbackQuery):
     game = await give_game(callback)
     massiv = await give_massiv(game)
-    await callback.message.edit_text(text=LEXICON_RU['/start_game'], reply_markup=create_game_process_keyboard(massiv))
+    # Тут массив нужно перемешать.
+    for i in range(len(massiv)):
+        await callback.message.edit_text(text=f'Поздравляю игра началась!!!\n{massiv[i]}')
+        time.sleep(5)
+        await callback.message.edit_text(text=f'Передайте телефон следующему игроку.')
+        time.sleep(5)
+    await callback.message.edit_text(text=f'Все роли получены можете начинать обсуждение.')
     await callback.answer()
 
 
@@ -24,9 +32,9 @@ async def process_about_me(callback: CallbackQuery):
 def give_massiv(game):
     massiv = []
     for i in range(1, game.peace+1):
-        massiv.append([f'Игрок {i}', 'Мирный житель', f'Ваше слово {game.word.word1}'])
+        massiv.append(f'Ваше слово «{game.word.word1.upper()}».')
     for i in range(game.peace+1, game.peace + game.spy+1):
-        massiv.append([f'Игрок {i}', 'Шпион', 'У Вас нет слова, вы Шпион'])
+        massiv.append(f'У Вас нет слова, вы Шпион')
     for i in range(game.peace + game.spy+1, game.peace + game.spy + game.undercover+1):
-        massiv.append([f'Игрок {i}', 'Забывчивый шпион', f'Ваше слово {game.word.word2}'])
+        massiv.append(f'Ваше слово «{game.word.word2.upper()}».')
     return massiv

@@ -42,7 +42,7 @@ def create_game_keyboard(game) -> InlineKeyboardMarkup:
     kb_builder.row(InlineKeyboardButton(text='➖', callback_data='undercover-1'),
                    InlineKeyboardButton(text='➕', callback_data='undercover+1'), width=2)
     kb_builder.row(InlineKeyboardButton(
-        text=f'Итого {game.peace+game.spy+game.undercover}. Поехали?!',
+        text=f'🏎️ Итого {game.peace+game.spy+game.undercover}. Поехали?! ',
         callback_data='start_game'))
     kb_builder.row(InlineKeyboardButton(text=LEXICON_RU['/back'], callback_data='/start'))
     return kb_builder.as_markup()

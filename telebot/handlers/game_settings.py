@@ -80,6 +80,7 @@ async def process_about_me(callback: CallbackQuery):
         await callback.message.edit_text(text=LEXICON_RU['/game'], reply_markup=create_game_keyboard(game))
     await callback.answer()
 
+
 # Эт X срабатывает на нажатие инлайн-кнопки "None" и ничего не делать
 @router.callback_query(F.data == 'None')
 async def process_about_me(callback: CallbackQuery):
