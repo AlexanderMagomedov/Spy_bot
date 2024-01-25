@@ -1,5 +1,3 @@
-from aiogram import Bot
-from aiogram.types import BotCommand
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from telebot.lexicon.lexicon_ru import LEXICON_COMMANDS, LEXICON_RU
@@ -29,7 +27,7 @@ def create_back_keyboard(arg) -> InlineKeyboardMarkup:
     return kb_builder.as_markup()
 
 
-# Функция создания инлайн кнопок главного меню
+# Функция создания инлайн кнопок настройки игры
 def create_game_keyboard(game) -> InlineKeyboardMarkup:
     # Создаем объект клавиатуры
     kb_builder = InlineKeyboardBuilder()
@@ -46,9 +44,10 @@ def create_game_keyboard(game) -> InlineKeyboardMarkup:
     kb_builder.row(InlineKeyboardButton(
         text=f'Итого {game.peace+game.spy+game.undercover}. Поехали?!',
         callback_data='start_game'))
+    kb_builder.row(InlineKeyboardButton(text=LEXICON_RU['/back'], callback_data='/start'))
     return kb_builder.as_markup()
 
-# Функция создания инлайн кнопок главного меню
+# Функция создания инлайн кнопок игроков
 def create_game_process_keyboard(massiv) -> InlineKeyboardMarkup:
     # Создаем объект клавиатуры
     kb_builder = InlineKeyboardBuilder()

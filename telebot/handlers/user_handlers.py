@@ -1,9 +1,8 @@
-from aiogram import F, Router
+from aiogram import F, Router, Bot
 from aiogram.filters import Command, CommandStart
 from aiogram.types import Message
 from aiogram.types import CallbackQuery
 from asgiref.sync import sync_to_async
-
 from telebot.keyboards.keyboards import create_menu_keyboard, create_back_keyboard, create_game_keyboard
 from telebot.lexicon.lexicon_ru import LEXICON_RU
 from telebot.models import Game, User, Word
@@ -13,12 +12,13 @@ router = Router()
 
 
 # Эт X срабатывает на команду "/start" отправлять приветственное сообщение показывая кнопки главного меню
-@router.message(CommandStart())
+@router.message(Command(commands='start'))
 async def process_start_command(message: Message):
     if str(message.from_user.id) not in give_all_telegram_id():
         user = User(name=message.from_user.username, telegram_id=message.from_user.id)
         await db_save(user)
     await message.answer(LEXICON_RU[message.text], reply_markup=create_menu_keyboard())
+    await message.delete()
 
 
 @sync_to_async
@@ -42,23 +42,11 @@ async def process_start(callback: CallbackQuery):
     await callback.answer()
 
 
-# Эт X срабатывает на команду "/about_me" отправляет сообщение о нас и кнопку "назад"
-@router.message(Command(commands='about_me'))
-async def process_about_me_command(message: Message):
-    await message.answer(LEXICON_RU[message.text], reply_markup=create_back_keyboard('/start'))
-
-
 # Эт X срабатывает на нажатие инлайн-кнопки "Обо мне" в главном меню показывает сообщение и кнопку "назад"
 @router.callback_query(F.data == '/about_me')
 async def process_about_me(callback: CallbackQuery):
     await callback.message.edit_text(text=LEXICON_RU['/about_me'], reply_markup=create_back_keyboard('/start'))
     await callback.answer()
-
-
-# Эт X срабатывает на команду "/rules" отправляет сообщение c правилами и кнопку "назад"
-@router.message(Command(commands='rules'))
-async def process_about_me_command(message: Message):
-    await message.answer(LEXICON_RU[message.text], reply_markup=create_back_keyboard('/start'))
 
 
 # Эт X срабатывает на нажатие инлайн-кнопки "Правила игры" в главном меню показывает правила и кнопку "назад"
@@ -68,21 +56,7 @@ async def process_about_me(callback: CallbackQuery):
     await callback.answer()
 
 
-# Эт X срабатывает на команду "/game" отправляет сообщение и клавиатуру создания игры
-@router.message(Command(commands='game'))
-async def process_about_me_command(message: Message):
-    game = Game(
-        peace=1,
-        spy=1,
-        undercover=1,
-        telegram=message.from_user.id,
-        word_id=await give_words()
-    )
-    await db_save(game)
-    await message.answer(LEXICON_RU[message.text], reply_markup=create_game_keyboard(game))
-
-
-# Эт X срабатывает на нажатие инлайн-кнопки "Начало игры" в главном меню показывает клавиатуру создания игры
+# Эт X срабатывает на нажатие инлайн-кнопки "Начало игры" в главном меню показывает клавиатуру настроек игры
 @router.callback_query(F.data == '/game')
 async def process_about_me(callback: CallbackQuery):
     game = Game(

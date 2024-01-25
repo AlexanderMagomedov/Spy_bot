@@ -29,6 +29,7 @@ class Command(BaseCommand):
 
             # Настраиваем главное меню бота
             await set_main_menu(bot)
+            await bot.delete_my_commands()
 
             # Пропускаем накопившиеся апдейты и запускаем polling
             await bot.delete_webhook(drop_pending_updates=True)
