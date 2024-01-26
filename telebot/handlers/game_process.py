@@ -27,10 +27,10 @@ async def process_about_me(callback: CallbackQuery):
         text_all = text_all + f'Игрок №{i+1} - {massiv[i][0]} \n'
         await callback.message.edit_text(text=f'Поздравляю игра началась!!!\n'
                                               f'Вы Игрок № {i+1} 😉\n{massiv[i][1]}')
-        time.sleep(1)
+        time.sleep(5)
         if i != len(massiv)-1:
             await callback.message.edit_text(text=f'Передайте телефон следующему игроку. 📱 ➡ 🦾')
-            time.sleep(1)
+            time.sleep(5)
     game.rez = text_all
     await db_save(game)
     await callback.message.edit_text(
