@@ -22,14 +22,19 @@ async def process_about_me(callback: CallbackQuery):
     game = await give_game(callback)
     massiv = await give_massiv(game)
     random.shuffle(massiv)
+    text_all = str()
     for i in range(len(massiv)):
-        await callback.message.edit_text(text=f'Поздравляю игра началась!!!\n{massiv[i]}')
-        time.sleep(5)
-        if i != len(massiv):
+        text_all = text_all + f'Игрок №{i+1} - {massiv[i][0]} \n'
+        await callback.message.edit_text(text=f'Поздравляю игра началась!!!\n'
+                                              f'Вы Игрок № {i+1} 😉\n{massiv[i][1]}')
+        time.sleep(1)
+        if i != len(massiv)-1:
             await callback.message.edit_text(text=f'Передайте телефон следующему игроку. 📱 ➡ 🦾')
-            time.sleep(5)
+            time.sleep(1)
+    game.rez = text_all
+    await db_save(game)
     await callback.message.edit_text(
-        text=f'🌟 Все роли распределены – наступило время великих приключений! '
+        text=f'🌟 Все роли распределены – наступило время великих приключений!'
              f'Начинайте обсуждение кто же из вас Шпион?!',
         reply_markup=create_finish_keyboard(game))
     await callback.answer()
@@ -38,10 +43,11 @@ async def process_about_me(callback: CallbackQuery):
 # Эт X срабатывает на нажатие инлайн-кнопки "Закончить игру" выводить слова и предлагать начать игру заново.
 @router.callback_query(IsFinish())
 async def process_about_me(callback: CallbackQuery):
-
+    game = await give_game(callback)
     await callback.message.edit_text(
-        text=f'УРА!!!🔥🔥🔥 \nЗагаданное слово было «{callback.data.split()[1]}». '
-             f'Слово Забывчивого шпиона «{callback.data.split()[2]}». '
+        text=f'УРА!!!🔥🔥🔥 \nЗагаданное слово «{callback.data.split()[1]}».\n'
+             f'Слово Забывчивого шпиона «{callback.data.split()[2]}».\n'
+             f'{game.rez}'
              f'Давайте сыграем еще раз тем же составом❓❗',
         reply_markup=create_double_keyboard('/game'))
     await callback.answer()
@@ -51,11 +57,11 @@ async def process_about_me(callback: CallbackQuery):
 def give_massiv(game):
     massiv = []
     for i in range(1, game.peace+1):
-        massiv.append(f'Ваше слово «{game.word.word1.upper()}».')
+        massiv.append(['Мирный житель', f'Ваше слово «{game.word.word1.upper()}».'])
     for i in range(game.peace+1, game.peace + game.spy+1):
-        massiv.append(f'У Вас нет слова, вы Шпион. 🕵️')
+        massiv.append(['Шпион', f'У Вас нет слова, вы Шпион. 🕵️'])
     for i in range(game.peace + game.spy+1, game.peace + game.spy + game.undercover+1):
-        massiv.append(f'Ваше слово «{game.word.word2.upper()}».')
+        massiv.append(['Забывчивый шпион', f'Ваше слово «{game.word.word2.upper()}».'])
     return massiv
 
 

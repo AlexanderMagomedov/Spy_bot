@@ -31,6 +31,7 @@ class Game(models.Model):
     undercover = models.PositiveSmallIntegerField(default=1)
     telegram = models.CharField(max_length=32, unique=True, primary_key=True)
     word = models.ForeignKey(to=Word, related_name='word', on_delete=models.CASCADE)
+    rez = models.TextField()
 
     class Meta:
         verbose_name = 'Игра'
