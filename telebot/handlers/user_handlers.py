@@ -15,7 +15,10 @@ router = Router()
 @router.message(Command(commands='start'))
 async def process_start_command(message: Message):
     if str(message.from_user.id) not in give_all_telegram_id():
-        user = User(name=message.from_user.username, telegram_id=message.from_user.id)
+        user = User(
+            first_name=message.from_user.first_name,
+            last_name=message.from_user.last_name,
+            telegram_id=message.from_user.id)
         await db_save(user)
     await message.answer(LEXICON_RU[message.text], reply_markup=create_menu_keyboard())
     await message.delete()

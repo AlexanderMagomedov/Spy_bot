@@ -14,7 +14,8 @@ class Word(models.Model):
 
 
 class User(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    first_name = models.CharField(max_length=100, unique=True)
+    last_name = models.CharField(max_length=100, unique=True)
     telegram_id = models.CharField(max_length=100, unique=True)
 
     class Meta:
@@ -22,7 +23,7 @@ class User(models.Model):
         verbose_name_plural = 'Телеграм пользователи'
 
     def __str__(self):
-        return f'{self.name} - {self.telegram_id}'
+        return f'{self.first_name} {self.last_name} - {self.telegram_id}'
 
 
 class Game(models.Model):
