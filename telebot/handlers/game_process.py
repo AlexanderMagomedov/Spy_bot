@@ -34,7 +34,7 @@ async def process_about_me(callback: CallbackQuery):
     game.rez = text_all
     await db_save(game)
     await callback.message.edit_text(
-        text=f'🌟 Все роли распределены – наступило время великих приключений!'
+        text=f'🌟 Все роли распределены – наступило время великих приключений! '
              f'Начинайте обсуждение кто же из вас Шпион?!',
         reply_markup=create_finish_keyboard(game))
     await callback.answer()
@@ -45,8 +45,8 @@ async def process_about_me(callback: CallbackQuery):
 async def process_about_me(callback: CallbackQuery):
     game = await give_game(callback)
     await callback.message.edit_text(
-        text=f'УРА!!!🔥🔥🔥 \nЗагаданное слово «{callback.data.split()[1]}».\n'
-             f'Слово Забывчивого шпиона «{callback.data.split()[2]}».\n'
+        text=f'УРА!!!🔥🔥🔥 \nЗагаданное слово «{callback.data.split(":")[1]}».\n'
+             f'Слово Забывчивого шпиона «{callback.data.split(":")[2]}».\n'
              f'{game.rez}'
              f'Давайте сыграем еще раз тем же составом❓❗',
         reply_markup=create_double_keyboard('/game'))

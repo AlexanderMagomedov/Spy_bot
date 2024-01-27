@@ -55,7 +55,7 @@ def create_finish_keyboard(game) -> InlineKeyboardMarkup:
     # Наполняем клавиатуру кнопками-закладками в порядке возрастания
     kb_builder.row(InlineKeyboardButton(
         text=LEXICON_RU['/finish'],
-        callback_data=f'finish {game.word.word1.upper()} {game.word.word2.upper()}'))
+        callback_data=f'finish:{game.word.word1.upper()}:{game.word.word2.upper()}'))
     return kb_builder.as_markup()
 
 
