@@ -44,8 +44,8 @@ async def process_about_me(callback: CallbackQuery):
     game = await give_game(callback)
     word = await give_word1_word2(game)
     await callback.message.edit_text(
-        text=f'УРА!!!🔥🔥🔥 \nЗагаданное слово «{word[0]}».\n'
-             f'Слово Забывчивого шпиона «{word[1]}».\n'
+        text=f'УРА!!!🔥🔥🔥 \nЗагаданное слово «{word[0].upper()}».\n'
+             f'Слово Забывчивого шпиона «{word[1].upper()}».\n'
              f'{game.rez}'
              f'Давайте сыграем еще раз тем же составом❓❗',
         reply_markup=create_double_keyboard('/game'))
