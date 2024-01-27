@@ -49,13 +49,13 @@ def create_game_keyboard(game) -> InlineKeyboardMarkup:
 
 
 # Функция создания инлайн кнопки "Закончить игру"
-def create_finish_keyboard(game) -> InlineKeyboardMarkup:
+def create_finish_keyboard() -> InlineKeyboardMarkup:
     # Создаем объект клавиатуры
     kb_builder = InlineKeyboardBuilder()
     # Наполняем клавиатуру кнопками-закладками в порядке возрастания
     kb_builder.row(InlineKeyboardButton(
         text=LEXICON_RU['/finish'],
-        callback_data=f'finish:{game.word.word1.upper()}:{game.word.word2.upper()}'))
+        callback_data=f'finish'))
     return kb_builder.as_markup()
 
 

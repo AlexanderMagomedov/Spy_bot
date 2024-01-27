@@ -5,13 +5,11 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from asgiref.sync import sync_to_async
 
-from telebot.filters.filters import IsFinish
 from telebot.handlers.game_settings import give_game
 from telebot.handlers.user_handlers import give_words, db_save
-from telebot.keyboards.keyboards import create_back_keyboard, create_finish_keyboard, create_game_keyboard, \
-    create_double_keyboard
+from telebot.keyboards.keyboards import create_finish_keyboard, create_game_keyboard, create_double_keyboard
 from telebot.lexicon.lexicon_ru import LEXICON_RU
-from telebot.models import Game
+
 
 router = Router()
 
@@ -36,21 +34,26 @@ async def process_about_me(callback: CallbackQuery):
     await callback.message.edit_text(
         text=f'🌟 Все роли распределены – наступило время великих приключений! '
              f'Начинайте обсуждение кто же из вас Шпион?!',
-        reply_markup=create_finish_keyboard(game))
+        reply_markup=create_finish_keyboard())
     await callback.answer()
 
 
 # Эт X срабатывает на нажатие инлайн-кнопки "Закончить игру" выводить слова и предлагать начать игру заново.
-@router.callback_query(IsFinish())
+@router.callback_query(F.data == 'finish')
 async def process_about_me(callback: CallbackQuery):
     game = await give_game(callback)
+    word = await give_word1_word2(game)
     await callback.message.edit_text(
-        text=f'УРА!!!🔥🔥🔥 \nЗагаданное слово «{callback.data.split(":")[1]}».\n'
-             f'Слово Забывчивого шпиона «{callback.data.split(":")[2]}».\n'
+        text=f'УРА!!!🔥🔥🔥 \nЗагаданное слово «{word[0]}».\n'
+             f'Слово Забывчивого шпиона «{word[1]}».\n'
              f'{game.rez}'
              f'Давайте сыграем еще раз тем же составом❓❗',
         reply_markup=create_double_keyboard('/game'))
     await callback.answer()
+
+@sync_to_async
+def give_word1_word2(game):
+    return [game.word.word1, game.word.word2]
 
 
 @sync_to_async
