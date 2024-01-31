@@ -99,6 +99,6 @@ async def process_show_gamer_press(callback: CallbackQuery):
     await callback.message.edit_text(
         text=f'🌟 Все роли распределены – наступило время великих приключений! '
              f'Начинайте обсуждение кто же из вас Шпион?!\n'
-             f'Вы решили избавиться от игрока № {callback.data.split()[2]}',
+             f'Вы решили избавиться от игрока № {callback.data.split()[2]} 💔 🔫',
         reply_markup=create_finish_keyboard(text_after))
     await callback.answer()
