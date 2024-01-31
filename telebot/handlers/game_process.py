@@ -20,9 +20,9 @@ async def process_about_me(callback: CallbackQuery):
     game = await give_game(callback)
     massiv = await give_massiv(game)
     random.shuffle(massiv)
-    text_all = str()
+    text_all = '_'.join(str(i[0]) for i in massiv)
+    text_after = '_'.join(f'Игрок № {i+1}' for i in range(len(massiv)))
     for i in range(len(massiv)):
-        text_all = text_all + f'Игрок №{i+1} - {massiv[i][0]} \n'
         await callback.message.edit_text(text=f'Поздравляю игра началась!!!\n'
                                               f'Вы Игрок № {i+1} 😉\n{massiv[i][1]}')
         time.sleep(5)
@@ -30,11 +30,12 @@ async def process_about_me(callback: CallbackQuery):
             await callback.message.edit_text(text=f'Передайте телефон следующему игроку. 📱 ➡ 🦾')
             time.sleep(5)
     game.rez = text_all
+    game.after = text_after
     await db_save(game)
     await callback.message.edit_text(
         text=f'🌟 Все роли распределены – наступило время великих приключений! '
              f'Начинайте обсуждение кто же из вас Шпион?!',
-        reply_markup=create_finish_keyboard())
+        reply_markup=create_finish_keyboard(text_after))
     await callback.answer()
 
 
@@ -43,13 +44,19 @@ async def process_about_me(callback: CallbackQuery):
 async def process_about_me(callback: CallbackQuery):
     game = await give_game(callback)
     word = await give_word1_word2(game)
+    game_rez = str()
+    game_list = [i for i in game.rez.split('_')]
+    for i in range(len(game_list)):
+        game_rez += f'Игрок №{i+1} - {game_list[i]}\n'
+
     await callback.message.edit_text(
         text=f'УРА!!!🔥🔥🔥 \nЗагаданное слово «{word[0].upper()}».\n'
-             f'Слово Забывчивого шпиона «{word[1].upper()}».\n'
-             f'{game.rez}'
+             f'Слово Забывчивого шпиона «{word[1].upper()}».\n' 
+             f'{game_rez}'
              f'Давайте сыграем еще раз тем же составом❓❗',
         reply_markup=create_double_keyboard('/game'))
     await callback.answer()
+
 
 @sync_to_async
 def give_word1_word2(game):
