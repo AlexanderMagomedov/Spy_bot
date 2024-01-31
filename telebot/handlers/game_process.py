@@ -5,6 +5,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from asgiref.sync import sync_to_async
 
+from telebot.filters.filters import IsGamer
 from telebot.handlers.game_settings import give_game
 from telebot.handlers.user_handlers import give_words, db_save
 from telebot.keyboards.keyboards import create_finish_keyboard, create_game_keyboard, create_double_keyboard
@@ -82,4 +83,22 @@ async def process_about_me(callback: CallbackQuery):
     game.word_id = await give_words()
     await db_save(game)
     await callback.message.edit_text(text=LEXICON_RU['/game'], reply_markup=create_game_keyboard(game))
+    await callback.answer()
+
+
+#Этот хендлер будер раскрывать роль игрока
+@router.callback_query(IsGamer())
+async def process_show_gamer_press(callback: CallbackQuery):
+    game = await give_game(callback)
+    game_list_rez = [i for i in game.rez.split('_')]
+    game_list_after = [i for i in game.after.split('_')]
+    game_list_after[int(callback.data.split()[2])-1] = game_list_rez[int(callback.data.split()[2])-1]
+    text_after = '_'.join(i for i in game_list_after)
+    game.after = text_after
+    await db_save(game)
+    await callback.message.edit_text(
+        text=f'🌟 Все роли распределены – наступило время великих приключений! '
+             f'Начинайте обсуждение кто же из вас Шпион?!\n'
+             f'Вы решили избавиться от игрока № {callback.data.split()[2]}',
+        reply_markup=create_finish_keyboard(text_after))
     await callback.answer()
